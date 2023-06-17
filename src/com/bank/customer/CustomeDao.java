@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mysql.jdbc.PreparedStatement;
 
@@ -128,6 +130,54 @@ public class CustomeDao {
 	  
 	  return customer;
 	  
+  }
+  public static List<Customer> listCustomer(){
+	  List<Customer> list=new ArrayList<Customer>();
+	  Connection connection=null;
+	  try {
+		 connection=CustomeDao.dbConnection();
+		 PreparedStatement preparedStatement=(PreparedStatement) connection.prepareStatement("select * from customer");
+	     ResultSet rs=preparedStatement.executeQuery();
+	     while(rs.next()){
+	    	 Customer customer= new Customer();
+	    	 
+	    	 customer.setCust_id(rs.getInt(1));
+	    	 customer.setCust_name(rs.getString(2));
+	    	 customer.setCust_email(rs.getString(3));
+	    	 customer.setCust_contact(rs.getString(4));
+	    	 customer.setCust_address1(rs.getString(5));
+	    	 customer.setCust_address2(rs.getString(6));
+	    	 customer.setAccount_number(rs.getString(7));
+	         list.add(customer);
+	    	 
+	     }
+	  } catch(Exception e){
+		e.printStackTrace();
+	}
+	  finally {
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	  
+	return list;
+	  
+  }
+  public static int deleteCustomer(int cust_id){
+	  int result=0;
+	  try {
+		Connection connection=CustomeDao.dbConnection();
+		PreparedStatement preparedStatement=(PreparedStatement) connection.prepareStatement("delete from customer where cust_id=?");
+	    preparedStatement.setInt(1, cust_id);
+	    result=preparedStatement.executeUpdate();
+	    connection.close();
+	  } catch (Exception e) {
+		// TODO: handle exception
+	}
+	return result;
   }
   
 }

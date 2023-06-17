@@ -31,7 +31,7 @@ public class EditCustomer  extends HttpServlet{
 		cust.setCust_address2(cust_address2);
 		cust.setAccount_number(account_number);
 		int result=CustomeDao.updateCustomer(cust);
-		
+		response.sendRedirect("customer-list");
 		
 	}
 
